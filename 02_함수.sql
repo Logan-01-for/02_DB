@@ -252,7 +252,7 @@ SELECT * FROM EMPLOYEE;
 SELECT EMP_NAME, SALARY, NVL(BONUS, 0), SALARY * NVL(BONUS, 0)
 FROM EMPLOYEE;
 
--- NVL2(컬럼명, 바꿀값1, 바꿀값2)
+-- NVLL(컬럼명, 바꿀값1, 바꿀값2)
 -- 해당 컬럼의 값이 있으면 바꿀값1로 변경, 
 -- NULL 이면 바꿀값2 변경
 
