@@ -146,3 +146,61 @@ FROM EMPLOYEE
 GROUP BY ROLLUP(DEPT_CODE, JOB_CODE)
 ORDER BY 1;
 
+-- CUBE : GROUP BY 절에 작성된 모든 컬럼의 중간 집계를 처리하는 함수
+SELECT DEPT_CODE, JOB_CODE, COUNT(*)
+FROM EMPLOYEE
+GROUP BY CUBE(DEPT_CODE, JOB_CODE)
+ORDER BY 1;
+
+-------------------------------------------------------------------
+
+/* 집합연산자 (SET IPERATOR)
+ * 
+ * -- 여러 SELECT의 결과(RESULT SET)를 하나의 결과로 만드는 연산자
+ * 
+ * - UNION(합집합) : 두 SELECT 결과를 하나로 합침. 단 중복은 한번만 작성
+ * 
+ * - INTERSECT (교집합) : 두 SELECT 결과 중 중복되는 부분만 조회
+ * 
+ * - UNION ALL : UNION + INTERSECT 합집합에서 중복 부분 제거 X
+ * 
+ * - MINOU (차집합) : A에서 A,B 교집합 부분을 제거하고 조회
+ * 
+ * */
+
+-- EMPLOYEE 테이블에서 
+-- 부서코드가 'D5' 인 사원의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE,SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+MINUS 
+-- (2번째 SELECT문) 급여가 300 만원 초과인 사원의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+-- (주의 사항!) 집합연산자를 사용하기 위한 SELECT문들은
+-- 조회하는 컬럼의 타입, 개수가 모두 동일해야 한다!
+
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+UNION
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, 1
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+-- SQL Error [1789] [42000]: ORA-01789: 질의 블록은 부정확한 수의 결과 열을 가지고 있습니다.
+-- SQL Error [1790] [42000]: ORA-01790: 대응하는 식과 같은 데이터 유형이어야 합니다
+
+-- 서로 다른 테이블이지만
+-- 컬럼의 타입, 개수만 일치하면 
+-- 집합 연산자 사용 가능!
+
+SELECT EMP_ID, EMP_NAME FROM EMPLOYEE
+UNION
+SELECT DEPT_ID, DEPT_TITLE FROM DEPARTMENT;
+
+
+
+
+
